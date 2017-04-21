@@ -1,0 +1,261 @@
+﻿Version=6.8
+NumberOfModules=0
+Build1=Default,com.htetznaing.mmrootchecker
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="19"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~'************ Google Play Services Base ************~\n~AddApplicationText(~\n~   <activity android:name="com.google.android.gms.common.api.GoogleApiActivity"~\n~  android:theme="@android:style/Theme.Translucent.NoTitleBar"~\n~  android:exported="false"/>~\n~    <meta-data~\n~  android:name="com.google.android.gms.version"~\n~  android:value="@integer/google_play_services_version" />~\n~)~\n~'************ Google Play Services Base (end) ************~\n~~\n~'************ Firebase Ads ************~\n~AddApplicationText(~\n~  <activity~\n~  android:name="com.google.android.gms.ads.AdActivity"~\n~  android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"~\n~  android:theme="@android:style/Theme.Translucent" />~\n~  <activity android:name="com.google.android.gms.ads.purchase.InAppPurchaseActivity"~\n~  android:theme="@style/Theme.IAPTheme"/>~\n~)~\n~'************ Firebase Ads (end) ************
+IconFile=
+NumberOfFiles=5
+File1=fb.png
+File2=icon.png
+File3=mm.ttf
+File4=no.png
+File5=yes.png
+NumberOfLibraries=4
+Library1=core
+Library2=mlfiles
+Library3=phone
+Library4=firebaseadmob
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel:Myanmar Root Checker
+	#VersionCode: 2
+	#VersionName: 1.1
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+	#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+Dim t1,t2 As Timer
+End Sub
+
+Sub Globals
+Dim About As Label
+Dim ml As MLfiles
+Dim b As Button
+Dim p As Phone
+Dim OS As String
+Dim ivno,ivyes As ImageView
+Dim imv As ImageView
+	Dim yes,no As Label
+	Dim banner As AdView
+	Dim interstitial As InterstitialAd
+	Dim lf As Label
+Dim mm As Typeface
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	mm = mm.LoadFromAssets("mm.ttf")
+	banner.Initialize2("banner","ca-app-pub-4173348573252986/5221460156",banner.SIZE_SMART_BANNER)
+	Dim height As Int
+	If GetDeviceLayoutValues.ApproximateScreenSize < 6 Then
+		'phones
+		If 100%x > 100%y Then height = 32dip Else height = 50dip
+	Else
+		'tablets
+		height = 90dip
+	End If
+	Activity.AddView(banner, 0dip, 100%y - height, 100%x, height)
+	banner.LoadAd
+		
+	interstitial.Initialize("interstitial","ca-app-pub-4173348573252986/8174926555")
+		interstitial.LoadAd
+		
+		t1.Initialize("t1",100)
+		t1.Enabled = False
+		
+		t2.Initialize("t2",30000)
+		t2.Enabled = True
+
+	Activity.Color = Colors.White
+Select p.SdkVersion
+   Case 2 : OS = "1.1"
+   Case 3 : OS = "1.5"
+   Case 4 : OS = "1.6"
+   Case 5 : OS = "2.0"
+   Case 6 : OS = "2.0.1"
+   Case 7 : OS = "2.1"
+   Case 8 : OS = "2.2"
+   Case 9 : OS = "2.3 - 2.3.2"
+   Case 10 : OS = "	2.3.3 - 2.3.7" ' 2.3.3 or 2.3.4
+   Case 11 : OS = "3.0"
+   Case 12 : OS = "3.1"
+   Case 13 : OS = "3.2"
+   	Case 14 : OS = "	4.0.1 - 4.0.2"
+		Case 15 : OS = "4.0.3 - 4.0.4"
+			Case 16 : OS = "	4.1.x"
+				Case 17 : OS = "	4.2.x"
+					Case 18 : OS = 	"4.3.x"
+						Case 19 : OS = "	4.4 - 4.4.4"
+							Case 21: OS = "5.0"
+								Case 22: OS = "5.1"
+									Case 23: OS = "6.0"
+										Case 24 : OS = "	7.0"
+											Case 25 : OS = "	7.1"
+								   Case Else : OS = "?"
+End Select
+
+imv.Initialize("imv")
+imv.Bitmap = LoadBitmap(File.DirAssets,"icon.png")
+imv.Gravity = Gravity.FILL
+Activity.AddView(imv,50%x - 50dip,10dip, 100dip, 100dip)
+
+About.Initialize("")
+	About.Text = "ဖုန္းအမည္ : " & p.Manufacturer & CRLF & CRLF & "ဖုန္းအမ်ိဳးအစား : " & p.Model & CRLF & CRLF & "ဖုန္းဗားရွင္း : " & OS
+Activity.AddView(About,0%x,(imv.Height+imv.Top),100%x,120dip)
+About.Typeface = mm
+About.Gravity = Gravity.CENTER
+About.TextColor = Colors.Black
+
+Dim bbg As ColorDrawable
+bbg.Initialize(Colors.Black,10)
+b.Initialize("b")
+b.Background = bbg
+	b.Text = "#Root ရွိ/မရွိစစ္ေဆးမည္"
+	b.Typeface = mm
+Activity.AddView(b,20%x,(About.Top+About.Height),60%x,50dip)
+
+ivyes.Initialize("ivyes")
+ivyes.Bitmap = LoadBitmap(File.DirAssets,"yes.png")
+ivyes.Gravity = Gravity.FILL
+Activity.AddView(ivyes,50%x - 30dip  , (About.Top+About.Height),  60dip  ,  60dip )
+ivyes.Visible = False
+
+ivno.Initialize("ivno")
+ivno.Bitmap = LoadBitmap(File.DirAssets,"no.png")
+ivno.Gravity = Gravity.FILL
+Activity.AddView(ivno,50%x - 30dip , (About.Top+About.Height), 60dip, 60dip)
+ivno.Visible = False
+
+		yes.Initialize("yes")
+	yes.Text = "ဂုဏ္ယူပါတယ္ :)" &CRLF& "သင့္ဖုန္းမွာ Root ရွိပါတယ္!"
+		yes.Gravity = Gravity.CENTER
+	yes.Typeface = mm
+		yes.TextColor = Colors.Green
+		Activity.AddView(yes,0%x,(ivyes.Top+ivyes.Height)+2%y,100%x,10%y)
+		yes.Visible = False
+		
+		no.Initialize("no")
+	no.Text =  "ဝမ္းနည္းပါတယ္ :(" &CRLF& "သင့္ဖုန္းမွာ Root မရွိပါဘူး!" &CRLF& "Root ဘယ္လိုလုပ္ရမလဲ ?"
+		no.Gravity = Gravity.CENTER
+		no.TextColor = Colors.Red
+	no.Typeface = mm
+		Activity.AddView(no,0%x,(ivno.Top+ivno.Height)+2%y,100%x,15%y)
+		no.Visible = False
+		
+		lf.Initialize("lf")
+		lf.Text = "Developed By Myanmar Android Apps"
+		lf.Gravity = Gravity.CENTER
+		lf.TextColor = Colors.Blue
+		Activity.AddView(lf,0%x,100%y - 130dip,100%x,10%y)
+
+End Sub
+
+Sub imv_Click
+		t1.Enabled = True
+End Sub
+
+Sub b_Click
+		t1.Enabled = True
+	ml.GetRoot
+	If ml.HaveRoot Then
+		ivno.Visible = False
+		b.Visible = False
+		no.Visible = False
+		ivyes.Visible = True
+		yes.Visible = True
+		Else
+		ivno.Visible = True
+		b.Visible = False
+		no.Visible = True
+		ivyes.Visible = False
+		yes.Visible = False
+	End If
+	
+End Sub
+
+Sub no_Click
+		t1.Enabled = True
+	Dim i As PhoneIntents
+	StartActivity(i.OpenBrowser("http://www.myanmarandroidapp.com/2017/04/Android-Root.html"))
+End Sub
+
+Sub yes_Click
+		t1.Enabled = True
+	Dim i As PhoneIntents
+	StartActivity(i.OpenBrowser("http://www.myanmarandroidapp.com/2017/04/Android-Root.html"))
+End Sub
+
+Sub t1_Tick
+If interstitial.Ready Then interstitial.Show Else interstitial.LoadAd
+t1.Enabled = False
+End Sub
+
+Sub t2_Tick
+	If interstitial.Ready Then interstitial.Show Else interstitial.LoadAd
+End Sub
+
+'InterstitialnterstInterstitialtInterstitialal Ads
+Sub Interstitial_AdClosed
+	interstitial.LoadAd
+End Sub
+
+Sub Interstitial_ReceInterstitialveAd
+	Log("Interstitial ReceInterstitialved")
+End Sub
+
+Sub Interstitial_FailedToReceiveAd (ErrorCode As String)
+	Log("Interstitial not ReceInterstitialved - " &"Error Code: "&ErrorCode)
+	interstitial.LoadAd
+End Sub
+
+Sub Interstitial_adopened
+	Log("Interstitial Opened")
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+
+Sub Activity_KeyPress (KeyCode As Int) As Boolean
+	ml.rmrf(File.DirRootExternal & "/MyanmarAndroidApps")
+	Dim Answ As Int
+	If KeyCode = KeyCodes.KEYCODE_BACK Then
+		Answ = Msgbox2("If you want to get new updates on  Facebook? Please Like " &CRLF & "Myanmar Android Apps Page!","Attention!", "Yes", "", "No",LoadBitmap(File.DirAssets,"fb.png" ))
+		If Answ = DialogResponse.NEGATIVE Then
+				t1.Enabled = True
+			Return False
+		End If
+	End If
+	If Answ = DialogResponse.POSITIVE Then
+			t1.Enabled = True
+		Try
+ 
+			Dim Facebook As Intent
+ 
+			Facebook.Initialize(Facebook.ACTION_VIEW, "fb://page/627699334104477")
+			StartActivity(Facebook)
+ 
+		Catch
+ 
+			Dim i As Intent
+			i.Initialize(i.ACTION_VIEW, "https://m.facebook.com/MmFreeAndroidApps")
+ 
+			StartActivity(i)
+ 
+		End Try
+		Return False
+	End If
+End Sub
+
